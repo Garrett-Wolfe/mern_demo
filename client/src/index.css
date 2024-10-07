@@ -1,0 +1,19 @@
+html,
+body,
+#root {
+  height: 100%; /* Ensures that all parent elements stretch to full height */
+  margin: 0; /* Removes any default margin */
+  padding: 0; /* Removes any default padding */
+  overflow: hidden; /* Prevents unwanted scrolling */
+}
+
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
+}
+
+body > #root > div {
+  height: 100vh;
+}
