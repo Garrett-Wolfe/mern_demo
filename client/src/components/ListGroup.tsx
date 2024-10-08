@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 interface ListGroupProps {
@@ -8,29 +8,28 @@ interface ListGroupProps {
   clickSideEffect?: (name: string) => void;
 }
 
+type listItem = { name: string; id: string };
+
+const getItemIdByName = (items: listItem[], name?: string) => {
+  if (!name) {
+    return "";
+  }
+  return items.find((item) => item.name === name)?.id || "";
+};
+
 function ListGroup({ initItems, heading, initialActiveItem, clickSideEffect }: ListGroupProps) {
-  const [items, setItems] = useState(initItems.map((elem) => ({ name: elem, id: uuidv4() })));
-
-  const getItemIdByName = (items: { name: string; id: string }[], name?: string) => {
-    if (!name) {
-      return "";
-    }
-    return items.find((item) => item.name === name)?.id || "";
-  };
-
+  const [items, setItems] = useState<listItem[]>([]);
   const [activeItemKey, setActiveItemKey] = useState(getItemIdByName(items, initialActiveItem));
 
-  interface ListItemProps {
-    item: string;
-    id: string;
-  }
+  useEffect(() => {
+    setItems(initItems.map((elem) => ({ name: elem, id: uuidv4() })));
+  }, [initItems]);
 
-  function ListItem({ item, id }: ListItemProps) {
+  function ListItem({ item, id }: { item: string; id: string }) {
     return (
       <li
         className={`list-group-item ${id === activeItemKey ? "active" : ""}`}
         onClick={() => {
-          console.log(id);
           setActiveItemKey(id);
           clickSideEffect?.(item);
         }}
